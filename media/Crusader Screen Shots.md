@@ -1,23 +1,49 @@
-# Crusader Screen Shots
+# Verify Crusader Screen Shots
 
-This page is useful to check the appearance of the screen shots.
-Use this process: get an image (screen shot) then
-trim off the drop shadow that the Mac captures.
-Then save the image in the _media_ directory.
-This page helps verify that the image retains the window border,
-but not the additional drop shadow.
+This page is useful for checking the appearance of screen shots.
+Capture the screen shots (Cmd-Shift-5 on macOS) and save with filenames
+like "Client.png", "Server.png", etc., one for each of the tabs.
+
+Run the `batch_add_border.sh` script - it finds all these files,
+removes the drop shadow and adds "Crusader-" to each result file.
+
+Remove the original files before committing to git.
 
 ## Client
+
 ![Options](./Crusader-Client.png)
 
 ## Server
-![Options](./Crusader-Server.png)
+
+![Server](./Crusader-Server.png)
 
 ## Remote
-![Options](./Crusader-Remote.png)
+
+![Remote](./Crusader-Remote.png)
 
 ## Monitor
-![Options](./Crusader-Monitor.png)
+
+![Monitor](./Crusader-Monitor.png)
 
 ## Result
-![Options](./Crusader-Result.png)
+
+![Result](./Crusader-Result.png)
+
+## Result with stats
+
+![Options](./Crusader-Result-with-stats.png)
+
+## Throughput popup
+
+![Throughput](./Crusader-Throughput.png)
+<img src="./Crusader-Throughput.png" alt="description" width="250" />
+
+## Latency popup
+
+![Latency](./Crusader-Latency.png)
+<img src="./Crusader-Latency.png" alt="description" width="250" />
+
+## Packet loss popup
+
+![Packet Loss](./Crusader-Loss.png)
+<img src="./Crusader-Loss.png" alt="description" width="125" />

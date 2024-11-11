@@ -7,12 +7,13 @@
 
 ![Crusader Results Screenshot](./media/Crusader-Result.png)
 
-The **Crusader Network Tester** measures network rates and latency
+The **Crusader Network Tester** measures network throughput, latency and packet loss
 in the presence of upload and download traffic.
 It also incorporates a continuous latency tester for
 monitoring background responsiveness.
-It produces plots of the traffic rates, latency and packet loss.
-Crusader uses TCP and UDP ports 35481 (only) for its tests.
+
+Crusader makes throughput measurements using TCP on port 35481
+and latency tests using UDP port 35481.
 The remote web server option uses TCP port 35482.
 Local server discovery uses UDP port 35483.
 
@@ -20,11 +21,13 @@ Local server discovery uses UDP port 35483.
 and Android are available on the
 [Releases](https://github.com/Zoxc/crusader/releases) page.
 The GUI is not prebuilt for Linux and must be built from source.
-A **Docker container** for running the server may be found on
-[dockerhub](https://hub.docker.com/r/zoxc/crusader).
+
+**Documentation** See the [Documentation](#documentation)
+section below.
 
 **Status:** The latest Crusader release version is shown above.
-  The pre-built binaries always provide the latest version.
+  The [pre-built binaries](https://github.com/Zoxc/crusader/releases)
+  always provide the latest version.
   See the [CHANGELOG.md](./CHANGELOG.md) file for details.
 
 ## Crusader GUI
@@ -44,9 +47,10 @@ Enter the address of another computer that's
 running the Crusader server, then click **Start test**.
 When the test is complete, the **Result** tab shows a
 chart like the second image below.
-(An easy way to run the server is to download a copy
-of the Crusader GUI
-to another computer, start it, then choose the **Server** tab.)
+
+An easy way to use Crusader is to download
+the Crusader GUI onto two computers, then
+start the server on one computer, and the client on the other.
 
 ![Crusader Client Screenshot](./media/Crusader-Client.png)
 
@@ -55,7 +59,7 @@ The Crusader GUI has five tabs:
 * **Client tab**
   Runs the Crusader client program.
   The options shown above are described in the
-  [Command-line options](./#command-line-options) section.
+  [Command-line options](./docs/CLI.md) page.
 
 * **Server tab**
   Runs the Crusader server, listening for connections from other clients
@@ -99,169 +103,17 @@ and back (round-trip time).
 * The **Packet Loss** plot has green and blue marks
 that indicate times when packets were lost.
 
-## Running Crusader from the command line
+For more details, see the
+[Understanding Crusader Results](./docs/RESULTS.md) page.
 
-### Server
+## Documentation
 
-To host a Crusader server, run this on the _server_ machine:
-
-```sh
-crusader serve
-```
-
-### Client
-
-To start a test, run this on the _client machine_:
-
-```sh
-crusader test <server-ip>
-```
-
-### Remote
-
-To host a web server that provides remote control of a Crusader client,
-run the command below, then connect to
-`http://ip-of-the-crusader-device:35482`
-
-```sh
-crusader remote
-```
-
-### Options for the `test` command
-
-**Usage: crusader test [OPTIONS] \<SERVER>**
-
-**Arguments:** \<SERVER>
-
-**Options:**
-
-* **`--download`**
-          Run a download test
-* **`--upload`**
-          Run an upload test
-* **`--bidirectional`**
-          Run a test doing both download and upload
-* **`--idle`**
-          Run a test only measuring latency. The duration is specified by `grace_duration`
-* **`--port <PORT>`**
-          Specifies the TCP and UDP port used by the server
-          [default: 35481]
-* **`--streams <STREAMS>`**
-          The number of TCP connections used to generate
-           traffic in a single direction
-          [default: 16]
-* **`--stream-stagger <SECONDS>`**
-          The delay between the start of each stream
-          [default: 0.0]
-* **`--load-duration <SECONDS>`**
-          The duration in which traffic is generated
-          [default: 5.0]
-* **`--grace-duration <SECONDS>`**
-          The idle time between each test
-          [default: 1.0]
-* **`--latency-sample-interval <MILLISECONDS>`**
-          [default: 5.0]
-* **`--throughput-sample-interval <MILLISECONDS>`**
-          [default: 20.0]
-* **`--plot-transferred`**
-          Plot transferred bytes
-* **`--plot-split-throughput`**
-          Plot upload and download separately and plot streams
-* **`--plot-max-throughput <BPS>`**
-          Sets the axis for throughput to at least this value.
-          SI units are supported so `100M` would specify 100 Mbps
-* **`--plot-max-latency <MILLISECONDS>`**
-          Sets the axis for latency to at least this value
-* **`--plot-width <PIXELS>`**
-* **`--plot-height <PIXELS>`**
-* **`--plot-title <PLOT_TITLE>`**
-* **`--latency-peer-address <LATENCY_PEER_ADDRESS>`**
-          Specifies another server (peer) which will
-          also measure the latency to the server independently of the client
-* **`--latency-peer`**
-          Use another server (peer) which will also measure the latency to the server independently of the client
-* **`--out-name <OUT_NAME>`**
-          The filename prefix used for the test result raw data and plot filenames
-* **`-h, --help`**
-          Print help (see a summary with '-h')
-
-## Building Crusader from source
-
-Use [pre-built binaries](https://github.com/Zoxc/crusader/releases)
-for everyday tests if available.
-
-To develop or debug Crusader, use the commands below
-to build the full set of binaries.
-Executables will be placed in `src/target/release`
-
-### Required dependencies
-
-* A Rust and C toolchain.
-
-### Additional dependencies for `crusader-gui`
-
-Development packages for:
-
-* `fontconfig`
-
-To install these on Ubuntu:
-
-```sh
-sudo apt install libfontconfig1-dev
-```
-
-### Building
-
-To build the `crusader` command line executable:
-
-```sh
-cd src
-cargo build -p crusader --release
-```
-
-To build both command line and GUI executables:
-
-```sh
-cd src
-cargo build --release
-```
-
-To build a docker container running the server:
-
-```sh
-cd docker
-docker build .. -t crusader -f server-static.Dockerfile
-```
-
-## Troubleshooting
-
-* On macOS, the first time you double-click
-  the pre-built `crusader` or `crusader-gui` icon,
-  the OS requires you to use **System Preferences -> Security**
-  to permit Crusader to run.
-  
-* Crusader requires that TCP and UDP ports 35481 are open for its tests.
-  Crusader also uses ports 35482 for the remote webserver
-  and port 35483 for discovering other Crusader Servers.
-  Check that your firewall is letting those ports through.
-
-* The [Releases](https://github.com/Zoxc/crusader/releases) page
-  has pre-built binaries.
-  You can build your own using the instructions above.
-  
-* Create a debug build by using `cargo build`
-  (instead of `cargo build --release`).
-  Binaries are saved in the _src/target/debug_ directory
-
-* Current binaries display the full commit hash in the log files.
-  To get the git commit hash of the current checkout,
-  use `git rev-parse HEAD`.
-  
-* The message `Warning: Load termination timed out. There may be residual untracked traffic in the background.` is not harmful. It may happen due to the TCP termination being lost
-  or TCP incompatibilities between OSes.
-  It's likely benign if you see throughput and latency drop
-  to idle values after the tests in the graph.
-
-* The up and down latency measurement rely on symmetric stable latency
-measurements to the server.
-These values may be wrong if those assumption don't hold on test startup.
+* [This README](./README.md)
+* [Understanding Crusader Results](./docs/RESULTS.md)
+* [Local Testing](./docs/LOCAL_TESTS.md)
+* [Command-line Options](./docs/CLI.md)
+* [Building Crusader from source](./docs/BUILDING.md)
+* [Troubleshooting](./docs/TROUBLESHOOTING.md)
+* [Docker container](https://hub.docker.com/r/zoxc/crusader)
+  for the server is available on
+  [dockerhub](https://hub.docker.com/r/zoxc/crusader).
